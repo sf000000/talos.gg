@@ -11,8 +11,12 @@ async function fetchRepackData(url: string): Promise<RepackSource | null> {
   try {
     const response: AxiosResponse<RepackSource> = await axios.get(url);
     return response.data;
-  } catch (error: any) {
-    console.error(`Failed to fetch data from ${url}:`, error.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(`Failed to fetch data from ${url}:`, error.message);
+    } else {
+      console.error(`Failed to fetch data from ${url}:`, String(error));
+    }
     return null;
   }
 }
@@ -50,8 +54,12 @@ export async function GET(): Promise<NextResponse> {
     );
 
     return NextResponse.json(combinedRepacks);
-  } catch (error: any) {
-    console.error("Error processing repacks:", error.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Error processing repacks:", error.message);
+    } else {
+      console.error("Error processing repacks:", String(error));
+    }
     return NextResponse.json(
       { error: "Failed to fetch and combine repack data." },
       { status: 500 }

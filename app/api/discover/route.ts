@@ -39,8 +39,12 @@ async function getTwitchToken(): Promise<string | null> {
     tokenExpiration = Date.now() + expires_in * 1000;
 
     return twitchToken;
-  } catch (error: any) {
-    console.error("Failed to obtain Twitch token:", error.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Failed to obtain Twitch token:", error.message);
+    } else {
+      console.error("Failed to obtain Twitch token:", String(error));
+    }
     return null;
   }
 }
@@ -80,11 +84,18 @@ async function fetchPopularityPrimitives(
     );
 
     return response.data;
-  } catch (error: any) {
-    console.error(
-      "Failed to fetch popularity primitives from IGDB:",
-      error.message
-    );
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(
+        "Failed to fetch popularity primitives from IGDB:",
+        error.message
+      );
+    } else {
+      console.error(
+        "Failed to fetch popularity primitives from IGDB:",
+        String(error)
+      );
+    }
     return null;
   }
 }
@@ -108,8 +119,12 @@ async function fetchGameDetails(
     );
 
     return response.data;
-  } catch (error: any) {
-    console.error("Failed to fetch game details from IGDB:", error.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Failed to fetch game details from IGDB:", error.message);
+    } else {
+      console.error("Failed to fetch game details from IGDB:", String(error));
+    }
     return null;
   }
 }
