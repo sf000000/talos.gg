@@ -11,6 +11,8 @@ export interface GameDetail {
     name: string;
   }[];
   first_release_date?: number;
+  aggregated_rating?: number;
+  genres?: string[];
 }
 
 export interface Repack {

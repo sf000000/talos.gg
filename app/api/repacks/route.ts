@@ -26,7 +26,7 @@ function processRepackData(
   repackerName: string
 ): Repack[] {
   if (!data || !data.downloads) return [];
-  return data.downloads.slice(0, 50).map((repack) => ({
+  return data.downloads.map((repack) => ({
     ...repack,
     repacker: repackerName,
   }));

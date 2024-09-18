@@ -18,7 +18,7 @@ const ChangelogPage = () => {
   }, []);
 
   return (
-    <ScrollArea className="container mx-auto p-4 mt-20 border rounded-md h-[768px]">
+    <ScrollArea className="container mx-auto border-black/20 p-4 mt-20 border rounded-md h-[768px]">
       <div>
         {commits.map((commit) => (
           <div
