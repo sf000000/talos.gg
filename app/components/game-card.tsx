@@ -10,7 +10,7 @@ const GameCard = ({ game }: { game: GameDetail }) => {
           <Image
             src={game.cover?.url || "/placeholder.png"}
             alt={game.name}
-            className="object-cover"
+            className="object-center"
             layout="fill"
           />
           <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity">
