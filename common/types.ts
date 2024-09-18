@@ -20,3 +20,11 @@ export interface Repack {
   fileSize: string;
   repacker?: string;
 }
+
+export interface Commit {
+  sha: string;
+  message: string;
+  date: string;
+  author: string;
+  url: string;
+}
