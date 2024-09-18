@@ -1,9 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Calendar, Gamepad2, Loader2, Monitor, Star } from "lucide-react";
+import { Calendar, Loader2, Star } from "lucide-react";
 
 import { useEffect, useState } from "react";
 import { GameDetail } from "@/common/types";
