@@ -37,7 +37,7 @@ export async function fetchGamesByGenre(
   const query = `
     fields id, name, cover.image_id;
     where genres = (${genreId}) & cover != null;
-    limit 20;
+    limit 50;
     sort rating_count desc;
   `;
 
