@@ -2,11 +2,29 @@ import { NextResponse } from "next/server";
 import axios, { AxiosResponse } from "axios";
 import { Commit } from "@/common/types";
 
-async function fetchCommits(url: string, headers: any): Promise<any[]> {
+interface GitHubCommit {
+  sha: string;
+  commit: {
+    message: string;
+    author: {
+      name: string;
+      email: string;
+      date: string;
+    };
+  };
+  html_url: string;
+}
+
+async function fetchCommits(
+  url: string,
+  headers: Record<string, string>
+): Promise<GitHubCommit[]> {
   try {
-    const response: AxiosResponse<any[]> = await axios.get(url, { headers });
+    const response: AxiosResponse<GitHubCommit[]> = await axios.get(url, {
+      headers,
+    });
     return response.data;
-  } catch (error) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       console.error(`Failed to fetch commits from ${url}:`, error.message);
     } else {
@@ -16,8 +34,8 @@ async function fetchCommits(url: string, headers: any): Promise<any[]> {
   }
 }
 
-function processCommits(commits: any[]): Commit[] {
-  return commits.map((commit: any) => ({
+function processCommits(commits: GitHubCommit[]): Commit[] {
+  return commits.map((commit: GitHubCommit) => ({
     sha: commit.sha,
     message: commit.commit.message,
     date: commit.commit.author.date,
@@ -49,7 +67,7 @@ export async function GET(): Promise<NextResponse> {
 
     const url = `https://api.github.com/repos/${owner}/${repo}/commits`;
 
-    const headers: any = {
+    const headers: Record<string, string> = {
       Accept: "application/vnd.github.v3+json",
     };
 
@@ -64,7 +82,7 @@ export async function GET(): Promise<NextResponse> {
     const latestCommits = processedCommits.slice(0, 50);
 
     return NextResponse.json(latestCommits);
-  } catch (error) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       console.error("Error fetching commits:", error.message);
     } else {
