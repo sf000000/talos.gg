@@ -3,22 +3,21 @@
 import { useState } from "react";
 import { Menu, X, AsteriskIcon } from "lucide-react";
 import Link from "next/link";
-
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
     {
-      name: "Integrations",
-      href: "#",
+      name: "Changelog",
+      href: "/changelog",
     },
     {
       name: "Documentation",
-      href: "#",
+      href: "/docs",
     },
     {
       name: "DMCA",
-      href: "#",
+      href: "/dmca",
     },
   ];
 
@@ -27,7 +26,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 backdrop-blur-lg border-b">
+    <nav className="sticky top-0 z-50 backdrop-blur-lg border-b border-primary/30">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
