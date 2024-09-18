@@ -28,7 +28,7 @@ const TrendingGames = () => {
     <div>
       <div>
         <h2 className="text-xl font-semibold">Popular Games</h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground font-medium">
           What everyone is playing right now
         </p>
       </div>
@@ -65,7 +65,7 @@ const GameCardSkeleton = () => {
           className="pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 py-5"
         >
           <div className="border border-primary/20 shadow rounded overflow-hidden">
-            <div className="relative w-full h-0 pb-[150%] bg-primary/20 animate-pulse"></div>
+            <div className="relative w-full h-0 pb-[150%] bg-black/30 animate-pulse"></div>
           </div>
         </CarouselItem>
       ))}
