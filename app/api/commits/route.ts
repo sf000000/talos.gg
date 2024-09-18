@@ -1,26 +1,18 @@
 import { NextResponse } from "next/server";
 import axios, { AxiosResponse } from "axios";
-import { Commit } from "@/common/types";
+import {
+  GitHubAPICommit,
+  GitHubAPICommitDetails,
+  GitHubCommit,
+} from "@/common/types";
 
-interface GitHubCommit {
-  sha: string;
-  commit: {
-    message: string;
-    author: {
-      name: string;
-      email: string;
-      date: string;
-    };
-  };
-  html_url: string;
-}
-
+// Fetch commits from the repository
 async function fetchCommits(
   url: string,
   headers: Record<string, string>
-): Promise<GitHubCommit[]> {
+): Promise<GitHubAPICommit[]> {
   try {
-    const response: AxiosResponse<GitHubCommit[]> = await axios.get(url, {
+    const response: AxiosResponse<GitHubAPICommit[]> = await axios.get(url, {
       headers,
     });
     return response.data;
@@ -34,14 +26,39 @@ async function fetchCommits(
   }
 }
 
-function processCommits(commits: GitHubCommit[]): Commit[] {
-  return commits.map((commit: GitHubCommit) => ({
-    sha: commit.sha,
-    message: commit.commit.message,
-    date: commit.commit.author.date,
-    author: commit.commit.author.name,
-    url: commit.html_url,
-  }));
+// Fetch commit details to get stats
+async function fetchCommitDetails(
+  url: string,
+  headers: Record<string, string>
+): Promise<GitHubAPICommitDetails | undefined> {
+  try {
+    const response = await axios.get(url, { headers });
+    return response.data;
+  } catch (error: unknown) {
+    console.error(`Failed to fetch commit details from ${url}:`, String(error));
+    return undefined;
+  }
+}
+
+// Process commits to match the GitHubCommit interface
+function processCommits(commits: GitHubAPICommit[]): GitHubCommit[] {
+  return commits.map((commit: GitHubAPICommit) => {
+    const date = commit.commit.author.date;
+    const [commitDate, time] = date.split("T");
+    const cleanTime = time.split("Z")[0];
+
+    return {
+      sha: commit.sha,
+      message: commit.commit.message,
+      date: commitDate,
+      time: cleanTime,
+      author: commit.commit.author.name,
+      url: commit.html_url,
+      additions: commit.stats?.additions || 0,
+      deletions: commit.stats?.deletions || 0,
+      avatar: commit.author?.avatar_url || commit.committer?.avatar_url || "",
+    };
+  });
 }
 
 export async function GET(): Promise<NextResponse> {
@@ -77,8 +94,18 @@ export async function GET(): Promise<NextResponse> {
 
     const commitsData = await fetchCommits(url, headers);
 
-    const processedCommits = processCommits(commitsData);
+    const commitsWithDetails = await Promise.all(
+      commitsData.map(async (commit) => {
+        const detailsUrl = `https://api.github.com/repos/${owner}/${repo}/commits/${commit.sha}`;
+        const details = await fetchCommitDetails(detailsUrl, headers);
+        return {
+          ...commit,
+          stats: details?.stats,
+        };
+      })
+    );
 
+    const processedCommits = processCommits(commitsWithDetails);
     const latestCommits = processedCommits.slice(0, 50);
 
     return NextResponse.json(latestCommits);
