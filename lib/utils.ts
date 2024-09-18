@@ -52,7 +52,7 @@ export async function fetchGamesByGenre(
     }),
   });
 
-  const data = (await response.json()) as any[];
+  const data = (await response.json()) as GameDetail[];
 
   const gamesWithCoverUrl = data.map((game) => {
     let coverUrl = null;
