@@ -15,17 +15,16 @@ async function getTwitchToken(): Promise<string | null> {
       throw new Error("Twitch client ID or secret is missing.");
     }
 
-    const response = await axios.post(
-      "https://id.twitch.tv/oauth2/token",
-      null,
-      {
-        params: {
-          client_id: clientId,
-          client_secret: clientSecret,
-          grant_type: "client_credentials",
-        },
-      }
-    );
+    const response: AxiosResponse<{
+      access_token: string;
+      expires_in: number;
+    }> = await axios.post("https://id.twitch.tv/oauth2/token", null, {
+      params: {
+        client_id: clientId,
+        client_secret: clientSecret,
+        grant_type: "client_credentials",
+      },
+    });
 
     const { access_token, expires_in } = response.data;
 
@@ -55,6 +54,22 @@ async function getValidTwitchToken(): Promise<string | null> {
   return twitchToken;
 }
 
+interface Game {
+  id: number;
+  name: string;
+  summary?: string;
+  cover?: { image_id: string };
+  aggregated_rating?: number;
+  platforms?: { name: string }[];
+  first_release_date?: number;
+  genres?: number[];
+}
+
+interface Genre {
+  id: number;
+  name: string;
+}
+
 export async function GET(req: NextRequest) {
   const gameId = req.nextUrl.searchParams.get("gameId");
 
@@ -68,7 +83,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const response: AxiosResponse<any[]> = await axios.post(
+    const response: AxiosResponse<Game[]> = await axios.post(
       "https://api.igdb.com/v4/games",
       `fields id, name, summary, cover.image_id, aggregated_rating, platforms.name, first_release_date, genres;
        where id = ${gameId};`,
@@ -86,7 +101,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Game not found." });
     }
 
-    let game = data[0];
+    const game = data[0];
 
     let coverUrl = null;
     if (game.cover && game.cover.image_id) {
@@ -96,7 +111,7 @@ export async function GET(req: NextRequest) {
     let genreNames: string[] = [];
 
     if (game.genres && game.genres.length > 0) {
-      const genresResponse: AxiosResponse<any[]> = await axios.post(
+      const genresResponse: AxiosResponse<Genre[]> = await axios.post(
         "https://api.igdb.com/v4/genres",
         `fields id, name; where id = (${game.genres.join(",")});`,
         {
@@ -110,7 +125,7 @@ export async function GET(req: NextRequest) {
       const genresData = genresResponse.data;
 
       const genreMap = new Map<number, string>();
-      genresData.forEach((genre: { id: number; name: string }) => {
+      genresData.forEach((genre: Genre) => {
         genreMap.set(genre.id, genre.name);
       });
 
@@ -126,7 +141,7 @@ export async function GET(req: NextRequest) {
     };
 
     return NextResponse.json(gameDetails);
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof Error) {
       console.error("Failed to fetch game details from IGDB:", error.message);
       return NextResponse.json({ error: error.message });
