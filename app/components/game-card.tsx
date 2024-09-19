@@ -5,7 +5,7 @@ import Link from "next/link";
 const GameCard = ({ game }: { game: GameDetail }) => {
   return (
     <Link href={`/games/${game.id}`} className="p-[10px] select-none">
-      <div className="border border-black dark:border-primary/10 shadow rounded-md overflow-hidden group">
+      <div className="border border-black/40 dark:border-primary/10 shadow rounded-md overflow-hidden group">
         <div className="relative w-full h-0 pb-[150%]">
           <Image
             src={game.cover?.url || "/placeholder.png"}

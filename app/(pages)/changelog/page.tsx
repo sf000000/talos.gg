@@ -34,7 +34,7 @@ const ChangelogPage = () => {
           <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
             <div className="flex flex-col lg:flex-row gap-6">
               <div className="w-full">
-                <Card>
+                <Card className="border border-black/30 dark:border-primary/5">
                   <CardHeader>
                     <CardTitle>Recent Commits</CardTitle>
                     <CardDescription>
@@ -48,7 +48,7 @@ const ChangelogPage = () => {
                           {Array.from({ length: 8 }).map((_, index) => (
                             <div key={index} className="mb-6 last:mb-0">
                               <div className="flex items-start space-x-4">
-                                <Avatar>
+                                <Avatar className="border border-black/30 dark:border-primary/10">
                                   <AvatarFallback>GH</AvatarFallback>
                                 </Avatar>
                                 <div className="space-y-1 flex-1">

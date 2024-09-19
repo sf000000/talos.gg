@@ -27,7 +27,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 backdrop-blur-lg border-b border-primary/5">
+    <nav className="sticky top-0 z-50 backdrop-blur-lg border-b border-white/10 dark:border-primary/10">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
@@ -37,8 +37,7 @@ export default function Navbar() {
             </Link>
           </div>
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
-              <ModeToggle />
+            <div className="ml-10 flex items-center space-x-4">
               {menuItems.map((item, index) => (
                 <a
                   key={index}
@@ -48,6 +47,7 @@ export default function Navbar() {
                   {item.name}
                 </a>
               ))}
+              <ModeToggle />
             </div>
           </div>
           <div className="md:hidden flex items-center">
