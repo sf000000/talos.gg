@@ -64,7 +64,7 @@ const GameCardSkeleton = () => {
           key={i}
           className="pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 py-5"
         >
-          <div className="border border-primary/20 shadow rounded overflow-hidden">
+          <div className="border border-black/30 dark:border-primary/5 shadow rounded overflow-hidden">
             <div className="relative w-full h-0 pb-[150%] bg-black/30 animate-pulse"></div>
           </div>
         </CarouselItem>

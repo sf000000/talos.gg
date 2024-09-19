@@ -56,10 +56,17 @@ const DownloadSources = ({ game }: DownloadSourcesProps) => {
   return (
     <div>
       <h1 className="font-semibold ">Downloads</h1>
-      <ScrollArea className="border h-[640px] border-black/30 px-2 py-3 rounded-md mt-2">
+      <ScrollArea className="border h-[640px] border-black/30 dark:border-primary/10 px-2 py-3 rounded-md mt-2">
         <div className="p-4">
           {loading ? (
-            <p>Loading...</p>
+            <div className="space-y-2">
+              {Array.from({ length: 10 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-black/30 dark:bg-primary/10 animate-pulse h-10 rounded-lg"
+                ></div>
+              ))}
+            </div>
           ) : repacks.length > 0 ? (
             repacks.map((repack) => (
               <div key={repack.title} className="mb-4">
@@ -77,19 +84,19 @@ const DownloadSources = ({ game }: DownloadSourcesProps) => {
                         </Badge>
                       </Link>
                       <Badge
-                        className="flex items-center gap-x-2"
+                        className="flex items-center gap-x-2 border border-black/30"
                         variant="secondary"
                       >
                         {repack.fileSize}
                       </Badge>
                       <Badge
-                        className="flex items-center gap-x-2"
+                        className="flex items-center gap-x-2 border border-black/30"
                         variant="secondary"
                       >
                         {moment(repack.uploadDate).format("MMMM D, YYYY")}
                       </Badge>
                       <Badge
-                        className="flex items-center gap-x-2"
+                        className="flex items-center gap-x-2 border border-black/30"
                         variant="secondary"
                       >
                         {repack.repacker}

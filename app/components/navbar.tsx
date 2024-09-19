@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Menu, X, AsteriskIcon } from "lucide-react";
 import Link from "next/link";
+import { ModeToggle } from "@/components/mode-toggle";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -26,7 +27,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 backdrop-blur-lg border-b border-primary/30">
+    <nav className="sticky top-0 z-50 backdrop-blur-lg border-b border-primary/5">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
@@ -37,6 +38,7 @@ export default function Navbar() {
           </div>
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-4">
+              <ModeToggle />
               {menuItems.map((item, index) => (
                 <a
                   key={index}

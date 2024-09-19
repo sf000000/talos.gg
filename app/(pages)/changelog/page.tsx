@@ -16,12 +16,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const ChangelogPage = () => {
   const [commits, setCommits] = useState<GitHubCommit[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     fetch("/api/commits")
       .then((res) => res.json())
       .then((data) => {
         setCommits(data);
+        setLoading(false);
       });
   }, []);
 
@@ -41,57 +43,81 @@ const ChangelogPage = () => {
                   </CardHeader>
                   <CardContent>
                     <ScrollArea className="h-[calc(100vh-300px)]">
-                      {commits.map((commit, index) => (
-                        <div key={index} className="mb-6 last:mb-0">
-                          <div className="flex items-start space-x-4">
-                            <Avatar>
-                              <AvatarImage
-                                src={commit.avatar}
-                                alt={commit.author}
-                              />
-                              <AvatarFallback>
-                                {commit.author.slice(0, 2).toUpperCase()}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="space-y-1 flex-1">
-                              <p className="text-sm font-medium">
-                                {commit.message}
-                              </p>
-                              <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                                <span>{commit.author}</span>
-                                <span>•</span>
-                                <span className="font-mono">
-                                  <Link
-                                    href={commit.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="hover:underline text-blue-500"
-                                  >
-                                    {commit.sha.slice(0, 7)}
-                                  </Link>
-                                </span>
-                                <span>•</span>
-                                <span>{commit.date}</span>
-                                <span>{commit.time}</span>
+                      {loading ? (
+                        <>
+                          {Array.from({ length: 8 }).map((_, index) => (
+                            <div key={index} className="mb-6 last:mb-0">
+                              <div className="flex items-start space-x-4">
+                                <Avatar>
+                                  <AvatarFallback>GH</AvatarFallback>
+                                </Avatar>
+                                <div className="space-y-1 flex-1">
+                                  <div className="w-96 h-4 bg-black/30 dark:bg-primary/10 rounded-md animate-pulse" />
+                                  <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                                    <span>GitHub</span>
+                                    <span>•</span>
+                                    <span className="font-mono">0000000</span>
+                                    <span>•</span>
+                                    <span>Just now</span>
+                                  </div>
+                                </div>
                               </div>
-                              <div className="flex items-center space-x-2 text-xs">
-                                <Badge
-                                  variant="secondary"
-                                  className="text-green-600"
-                                >
-                                  +{commit.additions}
-                                </Badge>
-                                <Badge
-                                  variant="secondary"
-                                  className="text-red-600"
-                                >
-                                  -{commit.deletions}
-                                </Badge>
+                            </div>
+                          ))}
+                        </>
+                      ) : (
+                        commits.map((commit, index) => (
+                          <div key={index} className="mb-6 last:mb-0">
+                            <div className="flex items-start space-x-4">
+                              <Avatar>
+                                <AvatarImage
+                                  src={commit.avatar}
+                                  alt={commit.author}
+                                />
+                                <AvatarFallback>
+                                  {commit.author.slice(0, 2).toUpperCase()}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="space-y-1 flex-1">
+                                <p className="text-sm font-medium">
+                                  {commit.message}
+                                </p>
+                                <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                                  <span>{commit.author}</span>
+                                  <span>•</span>
+                                  <span className="font-mono">
+                                    <Link
+                                      href={commit.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="hover:underline text-blue-500"
+                                    >
+                                      {commit.sha.slice(0, 7)}
+                                    </Link>
+                                  </span>
+                                  <span>•</span>
+                                  <span>{commit.date}</span>
+                                  <span>{commit.time}</span>
+                                </div>
+                                <div className="flex items-center space-x-2 text-xs">
+                                  <Badge
+                                    variant="outline"
+                                    className="text-green-600"
+                                  >
+                                    +{commit.additions}
+                                  </Badge>
+                                  <Badge
+                                    variant="outline"
+                                    className="text-red-600"
+                                  >
+                                    -{commit.deletions}
+                                  </Badge>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))
+                      )}
                     </ScrollArea>
                   </CardContent>
                 </Card>

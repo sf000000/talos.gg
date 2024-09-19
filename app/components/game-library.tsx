@@ -10,6 +10,7 @@ export default function GameLibrary() {
   const [genres, setGenres] = useState<Genre[]>([]);
   const [selectedGenre, setSelectedGenre] = useState<Genre>();
   const [games, setGames] = useState<GameDetail[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadGenres() {
@@ -32,6 +33,7 @@ export default function GameLibrary() {
         try {
           const data = await fetchGamesByGenre(selectedGenre.id);
           setGames(data);
+          setLoading(false);
         } catch (error) {
           console.error("Error fetching games:", error);
         }
@@ -46,8 +48,13 @@ export default function GameLibrary() {
         genres={genres}
         selectedGenre={selectedGenre}
         setSelectedGenre={setSelectedGenre}
+        loading={loading}
       />
-      <GameLibraryMainContent selectedGenre={selectedGenre} games={games} />
+      <GameLibraryMainContent
+        selectedGenre={selectedGenre}
+        games={games}
+        loading={loading}
+      />
     </div>
   );
 }
